@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+</head>
+
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="height:600px"></div>
+    <!-- ECharts单文件引入 -->
+    <!--
+    <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>-->
+    <script src="../js/lib/echarts-2.2.7/build/dist/echarts.js"></script>
+    <script type="text/javascript">
+    // 路径配置
+    require.config({
+        paths: {
+            //echarts: 'http://echarts.baidu.com/build/dist'
+            echarts: '../js/lib/echarts-2.2.7/build/dist',
+            zrender: '../js/lib/zrender/js/src'
+        }
+    });
+
+    // 使用
+    require(
+        [
+            'echarts',
+            'echarts/chart/force' // 使用柱状图就加载bar模块，按需加载
+        ],
+        function(ec) {
+            // 基于准备好的dom，初始化echarts图表
+            var myChart = ec.init(document.getElementById('main'));
+
+            var option = {
+                title: {
+                    text: '人物关系：乔布斯',
+                    subtext: '数据来自人立方',
+                    x: 'right',
+                    y: 'bottom'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{a} : {b}'
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        restore: {
+                            show: true
+                        },
+                        magicType: {
+                            show: true,
+                            type: ['force', 'chord']
+                        },
+                        saveAsImage: {
+                            show: true
+                        }
+                    }
+                },
+                legend: {
+                    x: 'left',
+                    data: ['家人', '朋友']
+                },
+                series: [{
+                    type: 'force',
+                    name: "人物关系",
+                    ribbonType: false,
+                    categories: [
+
+                        {
+                            name: '家人',
+                            symbol: 'diamond'
+                        }
+                    ],
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: true,
+                                textStyle: {
+                                    color: '#333'
+                                }
+                            },
+                            nodeStyle: {
+                                brushType: 'both',
+                                borderColor: 'rgba(255,215,0,0.4)',
+                                borderWidth: 1
+                            }
+                        },
+                        emphasis: {
+                            label: {
+                                show: false
+                                    // textStyle: null      // 默认使用全局文本样式，详见TEXTSTYLE
+                            },
+                            nodeStyle: {
+                                //r: 30
+                            },
+                            linkStyle: {}
+                        }
+                    },
+                    minRadius: 15,
+                    maxRadius: 25,
+                    gravity: 1.1,
+                    scaling: 1.2,
+                    draggable: false,
+                    linkSymbol: 'arrow',
+                    steps: 10,
+                    coolDown: 0.9,
+                    //preventOverlap: true,
+                    nodes: [{
+                        id:68,
+                        category: 0,
+                        name: '乔布斯',
+                        value: 10,
+                        symbol: 'circle',
+                        draggable: true,
+                        x: 10,
+                        y: 0
+                    }, {
+                        category: 0,
+                        name: '奥巴马',
+                        value: 8,
+                        x: 10,
+                        y: 20
+                    }],
+                    links: [
+
+                        {
+                            source: '奥巴马',
+                            target: '乔布斯',
+                            weight: 1
+                        }
+                    ]
+                }]
+            };
+
+
+
+
+
+
+
+
+
+            // 为echarts对象加载数据 
+            myChart.setOption(option);
+            var zr = myChart.getZrender();
+
+            var width = zr.getWidth();
+            var height = zr.getHeight() - 30;
+            var shapList = [];
+            var n = 1;
+            var CircleShape = require('zrender/shape/Circle');
+
+            var myShape = new CircleShape({
+                id: 1,
+                style: {
+                    x: -10,
+                    y: 20,
+                    r: 10,
+                    color: '#FF00FF'
+                }
+            });
+
+            zr.addShape(myShape);
+            zr.animate("1","style",true)
+                .when(2000, {
+                    x: 100,
+                    y: 200
+                })
+                .when(4000, {
+                    x: 100,
+                    y: 400
+                })
+                .start("Linear");
+
+
+
+
+
+
+
+
+
+
+
+        });
+    </script>
+</body>

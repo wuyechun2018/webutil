@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+</head>
+
+<body>
+    <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+    <div class="chart" id="main" style="width:900px;height:560px;margin-top: 30px;"></div>
+    <script type="text/javascript" src="../js/lib/echarts-3.2.3/echarts.js"></script>
+    <script src="../js/lib/jquery/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="../js/lib/echarts-3.2.3/extension/dataTool.js"></script>
+     <script type="text/javascript" src="../js/lib/require-2.3.2.js"></script>
+    <script type="text/javascript">
+
+
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    myChart.showLoading();
+
+    myChart.hideLoading();
+
+    $.get('../data/asset/geo/HK.json', function (geoJson) {
+
+    myChart.hideLoading();
+
+    echarts.registerMap('HK', geoJson);
+
+    myChart.setOption(option = {
+        title: {
+            text: '香港18区人口密度 （2011）',
+            subtext: '人口密度数据来自Wikipedia',
+            sublink: 'http://zh.wikipedia.org/wiki/%E9%A6%99%E6%B8%AF%E8%A1%8C%E6%94%BF%E5%8D%80%E5%8A%83#cite_note-12'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: '{b}<br/>{c} (p / km2)'
+        },
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            top: 'center',
+            feature: {
+                dataView: {readOnly: false},
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        visualMap: {
+            min: 800,
+            max: 50000,
+            text:['High','Low'],
+            realtime: false,
+            calculable: true,
+            inRange: {
+                color: ['lightskyblue','yellow', 'orangered']
+            }
+        },
+        series: [
+            {
+            }
+        ]
+    });
+});
+
+
+
+    </script>
+</body>

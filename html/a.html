@@ -1,0 +1,366 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+      <script src="http://data-visual.cn/datav/src/js/echarts/echarts-3.2.3.min.js"></script>
+      <script src="http://data-visual.cn/datav/src/js/echarts/map/china.js"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+      <script type="text/javascript" src="http://data-visual.cn/datav/src/js/echarts/extension/bmap.min.js"></script>
+        <script src="http://data-visual.cn/datav/src/js/jquery/jquery-3.1.1.min.js"></script>
+        <style type="text/css">
+            body {
+                margin: 0;
+            }
+            #main {
+                height: 90%;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="main" ></div>
+        <script>
+         $('#main').css({
+            height:$('body').height()-60,
+            width: $('body').width()-10
+         });
+         var myChart = echarts.init(document.getElementById('main'));
+         var startPoint = {
+            x: 104.114129,
+            y: 37.550339
+         };
+         // 地图自定义样式
+         var bmap={
+            center: [startPoint.x, startPoint.y],
+            zoom: 5,
+            roam: false,
+            mapStyle: {
+               styleJson: [
+                  {
+                     "featureType": "water",
+                     "elementType": "all",
+                     "stylers": {
+                        "color": "#044161"
+                        //"visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "land",
+                     "elementType": "all",
+                        "stylers": {
+                           //"color": "#004981"
+                           "visibility": "off"
+                        }
+                  },
+                  {
+                     "featureType": "boundary",
+                     "elementType": "geometry",
+                     "stylers": {
+                       // "color": "#064f85"
+                       "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "railway",
+                     "elementType": "all",
+                     "stylers": {
+                        "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "highway",
+                     "elementType": "geometry",
+                     "stylers": {
+                        "color": "#004981"
+                     }
+                  },
+                  {
+                     "featureType": "highway",
+                     "elementType": "geometry.fill",
+                     "stylers": {
+                        "color": "#005b96",
+                        "lightness": 1
+                     }
+                  },
+                  {
+                     "featureType": "highway",
+                     "elementType": "labels",
+                     "stylers": {
+                        "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "arterial",
+                     "elementType": "geometry",
+                     "stylers": {
+                      //  "color": "#004981"
+                      "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "arterial",
+                     "elementType": "geometry.fill",
+                     "stylers": {
+                        //"color": "#00508b"
+                        "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "poi",
+                     "elementType": "all",
+                     "stylers": {
+                        "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "green",
+                     "elementType": "all",
+                     "stylers": {
+                        "color": "#056197",
+                        "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "subway",
+                     "elementType": "all",
+                     "stylers": {
+                        "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "manmade",
+                     "elementType": "all",
+                     "stylers": {
+                        "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "local",
+                     "elementType": "all",
+                     "stylers": {
+                        "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "arterial",
+                     "elementType": "labels",
+                     "stylers": {
+                        "visibility": "off"
+                     }
+                  },
+                  {
+                     "featureType": "boundary",
+                     "elementType": "geometry.fill",
+                     "stylers": {
+                        "color": "#029fd4"
+                     }
+                  },
+                  {
+                     "featureType": "building",
+                     "elementType": "all",
+                     "stylers": {
+                        "color": "#1a5787"
+                     }
+                  },
+                  {
+                     "featureType": "label",
+                     "elementType": "all",
+                     "stylers": {
+                        "visibility": "off"
+                     }
+                  }
+               ]
+            }
+         }
+         
+         var geoCoordMap = {
+            '市住建委': [128,31.2891],
+            '工商前置机': [110.3467,41.4899],
+            '中心库': [116.4551,40.2539],
+            '网格平台': [100,23.1152],
+            '人社局前置机': [126,28.6633],
+            '公安前置机': [122.2229,39.4409],
+            '市食药局': [119.4543,31.5582],
+            '市卫计委': [113.5107,23.2196],
+            '证照文库': [91.1865,30.1465],
+            '规整库': [105,30.1904],
+            '一站通平台': [125,44.2584]
+         };
+
+         var BJData = [
+            [{name:'中心库'}, {name:'市住建委',value:95}],
+            [{name:'中心库'}, {name:'市卫计委',value:90}],
+            [{name:'中心库'}, {name:'公安前置机',value:80}],
+            [{name:'中心库'}, {name:'网格平台',value:70}],
+            [{name:'中心库'}, {name:'人社局前置机',value:60}],
+            [{name:'中心库'}, {name:'证照文库',value:50}],
+            [{name:'中心库'}, {name:'一站通平台',value:40}],
+            [{name:'中心库'}, {name:'工商前置机',value:30}],
+            [{name:'中心库'}, {name:'规整库',value:20}],
+            [{name:'中心库'}, {name:'市食药局',value:10}]
+         ];
+
+         var SHData = [
+            [{name:'市住建委'},{name:'工商前置机',value:95}],
+            [{name:'市住建委'},{name:'市卫计委',value:80}],
+            [{name:'市住建委'},{name:'一站通平台',value:60}],
+            [{name:'市住建委'},{name:'规整库',value:50}],
+            [{name:'市住建委'},{name:'中心库',value:30}],
+            [{name:'市住建委'},{name:'公安前置机',value:10}]
+         ];
+
+         var GZData = [
+            [{name:'市卫计委'},{name:'一站通平台',value:80}],
+            [{name:'市卫计委'},{name:'规整库',value:70}],
+            [{name:'市卫计委'},{name:'市食药局',value:40}],
+            [{name:'市卫计委'},{name:'中心库',value:30}]
+         ];
+
+         var planePath = 'path://M1705.06,1318.313v-89.254l-319.9-221.799l0.073-208.063c0.521-84.662-26.629-121.796-63.961-121.491c-37.332-0.305-64.482,36.829-63.961,121.491l0.073,208.063l-319.9,221.799v89.254l330.343-157.288l12.238,241.308l-134.449,92.931l0.531,42.034l175.125-42.917l175.125,42.917l0.531-42.034l-134.449-92.931l12.238-241.308L1705.06,1318.313z';
+
+         var convertData = function (data) {
+            var res = [];
+            for (var i = 0; i < data.length; i++)
+            {
+               var dataItem = data[i];
+               var fromCoord = geoCoordMap[dataItem[0].name];
+               var toCoord = geoCoordMap[dataItem[1].name];
+               if (fromCoord && toCoord) 
+               {
+                  res.push({
+                     fromName: dataItem[0].name,
+                     toName: dataItem[1].name,
+                     coords: [fromCoord, toCoord]
+                  });
+               }
+            }
+            return res;
+         };
+
+         var color = ['#a6c84c', '#ffa022', '#46bee9'];
+         var series = [];
+         [['中心库', BJData], ['市住建委', SHData], ['市卫计委', GZData]].forEach(function (item, i) {
+            series.push({
+               name: item[0] + ' Top10',
+               type: 'lines',
+               coordinateSystem: 'bmap',
+               zlevel: 1,
+               effect: {
+                  show: true,
+                  period: 6,
+                  trailLength: 0.7,
+                  color: '#fff',
+                  symbolSize: 3
+               },
+               lineStyle: {
+                  normal: {
+                     color: color[i],
+                     width: 0,
+                     curveness: 0.2
+                  }
+               },
+               data: convertData(item[1])
+            },
+            {
+               name: item[0] + ' Top10',
+               type: 'lines',
+               coordinateSystem: 'bmap',
+               zlevel: 2,
+               effect: {
+                  show: true,
+                  period: 6,
+                  trailLength: 0,
+                  symbol: planePath,
+                  symbolSize: 15
+               },
+               lineStyle: {
+                  normal: {
+                     color: color[i],
+                     width: 1,
+                     opacity: 0.4,
+                     curveness: 0.2
+                  }
+               },
+               data: convertData(item[1])
+            },
+            {
+               name: item[0] + ' Top10',
+               type: 'effectScatter',
+               coordinateSystem: 'bmap',
+               zlevel: 2,
+               rippleEffect: {
+                  brushType: 'stroke'
+               },
+               label: {
+                  normal: {
+                     show: true,
+                     position: 'right',
+                     formatter: '{b}'
+                  }
+               },
+               symbolSize: function (val) {
+                  return val[2] / 4;
+               },
+               showEffectOn: 'render',
+               itemStyle: {
+                  normal: {
+                     color: color[i]
+                  }
+               },
+               data: item[1].map(function (dataItem) {
+                  return {
+                     name: dataItem[1].name,
+                     value: geoCoordMap[dataItem[1].name].concat([dataItem[1].value])
+                  };
+               })
+            });
+         });
+
+         option = {
+            bmap:bmap,
+            color: ['gold','aqua','lime'],
+            backgroundColor: '#404a59',
+            title : {
+               text: '模拟迁徙',
+               subtext: '数据纯属虚构',
+               left: 'center',
+               textStyle : {
+                  color: '#fff'
+               }
+            },
+            tooltip : {
+               trigger: 'item'
+            },
+            legend: {
+               orient: 'vertical',
+               top: 'bottom',
+               left: 'right',
+               data:['中心库 Top10', '市住建委 Top10', '市卫计委 Top10'],
+               textStyle: {
+                  color: '#fff'
+               },
+               selectedMode: 'single'
+            },
+            geo: {
+              map: 'bmap',
+        label: {
+            emphasis: {
+                show: false
+            }
+        },
+        roam: true,
+        itemStyle: {
+            normal: {
+                areaColor: '#323c48',
+                borderColor: '#404a59'
+            },
+            emphasis: {
+                areaColor: '#2a333d'
+            }
+        }
+            },
+            series: series
+         };
+               
+         myChart.setOption(option);
+      </script>
+   </body>
+</html>

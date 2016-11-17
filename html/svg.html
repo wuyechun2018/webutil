@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+</head>
+
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="height:600px"></div>
+    <!-- ECharts单文件引入 -->
+    <!-- <script src="http://echarts.baidu.com/build/dist/echarts.js"></script>-->
+    <script src="../js/lib/echarts-2.2.7/build/dist/echarts.js"></script>
+    <script src="../js/lib/jquery/jquery-1.9.1.js"></script>
+    <script type="text/javascript">
+    // 路径配置
+    require.config({
+        paths: {
+            //echarts: 'http://echarts.baidu.com/build/dist'
+            echarts: '../js/lib/echarts-2.2.7/build/dist'
+        }
+    });
+
+    // 使用
+    require(['echarts', 'echarts/chart/map' // 使用柱状图就加载bar模块，按需加载
+        ],
+        function(ec) {
+
+            require('echarts/util/mapData/params').params.football = {
+                getGeoJson: function(callback) {
+                    $.ajax({
+                        url: "../svg/football.svg",
+                        dataType: 'xml',
+                        success: function(xml) {
+                            callback(xml)
+                        }
+                    });
+                }
+            }
+
+            // 基于准备好的dom，初始化echarts图表
+            var myChart = ec.init(document.getElementById('main'));
+
+            var option = {
+                backgroundColor: '#000',
+                title: {
+                    text: '数据',
+                    subtext: '地图SVG扩展',
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                tooltip: {
+                    trigger: 'item'
+                },
+                toolbox: {
+                    show: true,
+                    feature: {
+                        mark: {
+                            show: true
+                        },
+                        dataView: {
+                            show: true,
+                            readOnly: false
+                        },
+                        restore: {
+                            show: true
+                        },
+                        saveAsImage: {
+                            show: true
+                        }
+                    }
+                },
+                series: [{
+                    name: '数据脉络图',
+                    type: 'map',
+                    mapType: 'football',
+                    // 自定义扩展图表类型
+                    roam: true,
+                    itemStyle: {
+                        normal: {
+                            label: {
+                                show: true
+                            }
+                        },
+                        emphasis: {
+                            label: {
+                                show: true
+                            }
+                        }
+                    },
+                    data: [{
+                        name: '规整库',
+                        hoverable: false,
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true
+                                }
+                            }
+                        }
+                    }],
+                    textFixed: {
+
+
+                    },
+                    markPoint: {
+                        symbol: 'circle',
+                        symbolSize: 20,
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    formatter: '{b}',
+                                    textStyle: {
+                                        color: '#fff'
+                                    }
+
+                                }
+                            }
+                        },
+                        effect: {
+                            show: true,
+                            shadowBlur: 10,
+                            scaleSize: 1
+                        },
+                        data: [{
+                            name: '规整库',
+                            value: 200,
+                            itemStyle: {
+                                normal: {
+                                    color: "rgb(235,100,12)"
+                                }
+                            },
+                            symbol: 'roundRect',
+                            symbolSize: 20,
+                            geoCoord: [0, 200],
+                            tooltip: {
+                                show: true,
+                                formatter: 'IP:172.16.7.6:1521  Oracle'
+                            }
+
+
+
+
+                        }, {
+                            name: '中心库',
+                            value: 300,
+                            itemStyle: {
+                                normal: {
+                                    color: "rgb(125,81,172)"
+                                }
+                            },
+                            symbol: 'circle',
+                            symbolSize: 40,
+                            geoCoord: [300, 200]
+                        }, {
+                            name: '网格平台',
+                            value: 200,
+                            itemStyle: {
+                                normal: {
+                                    color: "rgb(225,81,172)"
+                                }
+                            },
+                            symbol: 'circle',
+                            symbolSize: 30,
+                            geoCoord: [300, 500]
+                        }, {
+                            name: '公安前置机',
+                            value: 100,
+                            itemStyle: {
+                                normal: {
+                                    color: "rgb(35,101,72)"
+                                }
+                            },
+                            symbol: 'roundRect',
+                            symbolSize: 60,
+                            geoCoord: [0, 500]
+                        }]
+                    },
+                    markLine: {
+                        smooth: true,
+                        effect: {
+                            show: true,
+                            scaleSize: 1,
+                            period: 20,
+                            color: '#fff'
+                        },
+                        symbol: ['none'],
+                        tooltip: {
+                            show: true,
+                            formatter: function(params) {
+                                return "正常：8 类; 异常：0 类";
+                            }
+                        },
+
+                        itemStyle: {
+                            normal: {
+                                borderWidth: 5,
+                                color: 'gold',
+                                lineStyle: {
+                                    type: 'solid'
+                                },
+                                label: {
+                                    show: false,
+                                    formatter: '{b}',
+                                    textStyle: {
+                                        color: '#fff'
+                                    }
+
+
+
+
+
+
+                                }
+
+
+
+                            }
+                        },
+                        data: [
+                            [{
+                                name: '规整库',
+                                geoCoord: [300, 200]
+                            }, {
+                                name: '中心库',
+                                geoCoord: [0, 200],
+                                symbol: 'arrow',
+                                symbolSize: 2,
+                                symbolOffset: [100, 100]
+
+                            }],
+                            [{
+                                name: '1',
+                                geoCoord: [0, 200]
+                            }, {
+                                name: '2',
+                                geoCoord: [300, 200],
+                                symbol: 'arrow',
+                                symbolSize: 2,
+                                symbolOffset: [100, 100]
+
+                            }],
+                            [{
+                                name: '2',
+                                geoCoord: [300, 500]
+                            }, {
+                                name: '1',
+                                geoCoord: [0, 500]
+                            }]
+                        ]
+                    }
+                }]
+            };
+
+            // 为echarts对象加载数据 
+            myChart.setOption(option);
+
+            myChart.on('click', function(params) {
+
+
+
+
+
+            })
+
+
+
+
+
+        });
+    </script>
+</body>
